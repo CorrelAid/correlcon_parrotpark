@@ -1,0 +1,119 @@
+---
+title: "Parrotpark: Why and How to self-host LLMs"
+author: "Jonas Stettner | CorrelAid @ CDL"
+date: 05.07.2025
+format: revealjs
+theme: solarized
+self-contained: true
+---
+
+## Agenda
+
+1. What is Parrotpark?
+1. Why self-hosting?
+2. How to self-host?
+    - a: LLM Hosting options
+    - b: Dedicated GPU vs API service
+3. What to self-host?
+    - a: Which LLM?
+    - b: Other required services
+3. Parrotpark Architecture
+4. Evaluation
+4. Demonstration
+5. Disucssion
+
+
+## What is Parrotpark? 🦜
+
+- Cooperation with D64 in the context of the project "Code of Conduct: Democratic AI"
+- Experimental infrastructure project for self-hosting LLMs and accompanying applications
+- Targeted at work in civil society organizations
+
+
+## Why self-hosting? 
+
+- Digital Sovereignty
+- Dependence, lack of transparency and little control:
+    - Data processing (GDPR)
+    - Resource consumption
+    - Properties and training of the models
+    - Model and tool usage/configuration; e.g. web search (🗲 GUI apps such as GPT Builder)
+
+## How to self-host: LLM hosting options
+
+- Chat interface and API bridge trivial to self-host -  ✅ Model and tool usage/configuration
+- LLM inference: 
+    -  Azure OpenAI on EU servers - ✅ GDPR
+    - **Open models** - ✅ More transparent model
+        - API services hosted in the EU 
+        - Dedicated GPU server - ✅ Fully transparent resource consumption (only inference)
+
+## Dedicated GPU vs API service: Costs for EU Provider Scaleway
+
+<img style="float: middle" src="images/service_pricing.png"/>
+
+- Claude 4 Opus on Open Router: $15/M input tokens; $75/M output tokens
+- GPT-4o on Open Router: $2.50/M input tokens; $10/M output tokens
+
+## Dedicated GPU vs API service: Costs for EU Provider Scaleway
+
+<img style="float: middle" src="images/gpu_pricing.png"/>
+
+- How much VRAM can we afford?: **L4** with 24GB, limits model choices + context window size
+
+## Dedicated GPU vs API service: Example Pricing Calculation
+
+- Scaleways allows automated GPU instance creation (unlike Hetzner), so we deploy only during working hours  
+    - $\text{Cost} = \text{€}0.75 \times (10\,\text{h} \times 5\,\text{days} \times 4\,\text{weeks}) = \text{€}150$  
+    - Including tax (19%): **€178.50**
+
+- Mistral Small 3.2 24B via OpenRouter (assuming 50/50 input/output split):  
+    - €178.50 = $210.27 (at €1 = $1.178)  
+    - $\frac{\text{\$}105.14}{0.05} + \frac{\text{\$}105.14}{0.10}$ = **3,154M tokens** 
+    - Per working day: $\frac{3{,}154}{20} = 158\,\text{M tokens/day}$
+
+## Dedicated GPU vs API service: Why Dedicated?
+
+- Maximum control and transparency
+- More predictable/fixed costs
+- One can fit more stuff on the GPU server
+    - Embedding and reranking models
+    - Frontend and api bridge
+- Exact metrics on hardware and inference server level
+
+## What to self host? - Which LLM?
+
+- Model size, context and concurrency: 
+    - Infrastructure choice limits model options
+    - Pre-quantised models on Hugging Face
+- Which language and task is the model used for?
+    - "When a measure becomes a target, it ceases to be a good measure."
+- Finetuning and Prompt Engineering
+
+## What to self host? - Other required services
+
+- Inference Server: Ollama, vLLM, Hugging Face TGI etc.
+- LiteLLM: Control over the API 
+- Chat Interface: LibreChat, Open WebUI
+- Databases (Vector, Application)
+- Auth
+- MCP
+
+## High Level Overview
+
+![](images/graph.png)]
+
+
+## Evaluation
+
+- Time window: June 17th to June 27th (9 working days)
+- Scraped Metrics: http://mtbs.correlaid.org/public/dashboard/6032e4e9-e87a-49d7-bd67-f0d92552cc1c
+- User Survey
+
+## Evaluation: Tokens and Pricing
+
+- Total processed tokens: **329,503** input / **103,083** output
+- ❌ API service for the same model would have cost waaaaay less: **$0.027** vs ~(€178.5/2)=€89
+
+## Demonstration
+<img style="float: left; margin-right: 50px" src="images/image.png"/>
